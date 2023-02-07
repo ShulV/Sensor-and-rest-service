@@ -6,14 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.shulpov.springapp.SensorRestApp.dto.SensorDTO;
 import ru.shulpov.springapp.SensorRestApp.models.Sensor;
 import ru.shulpov.springapp.SensorRestApp.services.SensorService;
-import ru.shulpov.springapp.SensorRestApp.utils.exceptions.SensorNotCreatedException;
+import ru.shulpov.springapp.SensorRestApp.utils.exceptions.SensorNotValidException;
+import ru.shulpov.springapp.SensorRestApp.utils.responses.SensorErrorResponse;
 import ru.shulpov.springapp.SensorRestApp.utils.validators.SensorValidator;
 
 import javax.validation.Valid;
@@ -45,16 +43,23 @@ public class SensorRestController {
             for (FieldError error: errors) {
                 errorMsg
                         .append(error.getField())
-                        .append("-")
+                        .append(" - ")
                         .append(error.getDefaultMessage())
                         .append(";");
             }
-            throw new SensorNotCreatedException(errorMsg.toString());
+            throw new SensorNotValidException(errorMsg.toString());
         }
-        //
         sensorService.save(sensor);
 
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<SensorErrorResponse> handleException(SensorNotValidException e) {
+        SensorErrorResponse sensorErrorResponse = new SensorErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(sensorErrorResponse, HttpStatus.BAD_REQUEST);
     }
 
     private Sensor convertToSensor(SensorDTO sensorDTO) {

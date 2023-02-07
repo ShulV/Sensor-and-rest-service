@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.shulpov.springapp.SensorRestApp.models.Sensor;
 import ru.shulpov.springapp.SensorRestApp.repositories.SensorRepository;
+import ru.shulpov.springapp.SensorRestApp.utils.exceptions.SensorNotValidException;
 
 import java.util.Optional;
 
@@ -25,5 +26,10 @@ public class SensorService {
 
     public Optional<Sensor> findByName(String name) {
         return sensorRepository.findByName(name);
+    }
+
+    public Optional<Sensor> findById(int id) {
+        Optional<Sensor> foundSensor = sensorRepository.findById(id);
+        return foundSensor;
     }
 }

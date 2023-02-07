@@ -1,7 +1,10 @@
 package ru.shulpov.springapp.SensorRestApp.dto;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ru.shulpov.springapp.SensorRestApp.models.Sensor;
+import ru.shulpov.springapp.SensorRestApp.utils.deserializers.MeasurementDTODeserializer;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -15,12 +18,13 @@ public class MeasurementDTO {
     private boolean raining;
 
     @NotEmpty(message = "Field shouldn't be empty")
-    private Sensor sensor;
+    @JsonProperty("sensor")
+    private SensorDTO sensorDTO;
 
-    public MeasurementDTO(float value, boolean raining, Sensor sensor) {
+    public MeasurementDTO(float value, boolean raining, SensorDTO sensorDTO) {
         this.value = value;
         this.raining = raining;
-        this.sensor = sensor;
+        this.sensorDTO = sensorDTO;
     }
 
     public MeasurementDTO() {
@@ -43,11 +47,11 @@ public class MeasurementDTO {
         this.raining = raining;
     }
 
-    public Sensor getSensor() {
-        return sensor;
+    public SensorDTO getSensorDTO() {
+        return sensorDTO;
     }
 
-    public void setSensor(Sensor sensor) {
-        this.sensor = sensor;
+    public void setSensorDTO(SensorDTO sensorDTO) {
+        this.sensorDTO = sensorDTO;
     }
 }
