@@ -1,35 +1,32 @@
 package ru.shulpov.springapp.SensorRestApp.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "sensor")
-public class Sensor {
+public class Sensor implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(name = "name")
+    @NotEmpty(message = "Field shouldn't be empty")
+    @Size(min = 3, max = 30, message = "Name should be between 3 and 30")
     private String name;
 
     @OneToMany(mappedBy = "sensor")
     private List<Measurement> measurements;
 
-    public Sensor() {
-    }
-
-    public Sensor(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

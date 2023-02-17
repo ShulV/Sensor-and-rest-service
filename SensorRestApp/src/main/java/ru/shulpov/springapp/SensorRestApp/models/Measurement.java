@@ -1,6 +1,10 @@
 package ru.shulpov.springapp.SensorRestApp.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -10,52 +14,48 @@ public class Measurement {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "value")
-    private float value;
+    @NotNull
+    @Min(value = -100, message = "Value should be more than -100")
+    @Max(value = 100, message = "Value shouldn't be more than 100")
+    private Float value;
 
     @Column(name = "raining")
-    private boolean raining;
+    @NotNull
+    private Boolean raining;
 
     @Column(name = "timestamp")
+    @NotNull
     private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name="sensor_id", referencedColumnName = "id")
+    @NotNull
     private Sensor sensor;
 
-    public Measurement() {
-    }
-
-    public Measurement(long id, float value, boolean raining, LocalDate date) {
-        this.id = id;
-        this.value = value;
-        this.raining = raining;
-        this.date = date;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public float getValue() {
+    public Float getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(Float value) {
         this.value = value;
     }
 
-    public boolean isRaining() {
+    public Boolean isRaining() {
         return raining;
     }
 
-    public void setRaining(boolean raining) {
+    public void setRaining(Boolean raining) {
         this.raining = raining;
     }
 

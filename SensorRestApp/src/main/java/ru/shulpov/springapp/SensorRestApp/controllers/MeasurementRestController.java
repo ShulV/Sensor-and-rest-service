@@ -6,20 +6,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import ru.shulpov.springapp.SensorRestApp.dto.MeasurementDTO;
 import ru.shulpov.springapp.SensorRestApp.models.Measurement;
-import ru.shulpov.springapp.SensorRestApp.models.Sensor;
 import ru.shulpov.springapp.SensorRestApp.services.MeasurementService;
 import ru.shulpov.springapp.SensorRestApp.services.SensorService;
 import ru.shulpov.springapp.SensorRestApp.utils.exceptions.MeasurementNotCreatedException;
 import ru.shulpov.springapp.SensorRestApp.utils.responses.MeasurementErrorResponse;
-import ru.shulpov.springapp.SensorRestApp.utils.validators.SensorValidator;
+import ru.shulpov.springapp.SensorRestApp.utils.validators.MeasurementValidator;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/measurements")
@@ -28,12 +25,15 @@ public class MeasurementRestController {
     private final SensorService sensorService;
     private final ModelMapper modelMapper;
 
+    private final MeasurementValidator measurementValidator;
+
     @Autowired
     public MeasurementRestController(MeasurementService measurementService, SensorService sensorService,
-                                     ModelMapper modelMapper) {
+                                     ModelMapper modelMapper, MeasurementValidator measurementValidator) {
         this.measurementService = measurementService;
         this.sensorService = sensorService;
         this.modelMapper = modelMapper;
+        this.measurementValidator = measurementValidator;
     }
 
     @PostMapping("/add")
@@ -41,12 +41,7 @@ public class MeasurementRestController {
                                           BindingResult bindingResult) {
 
         Measurement measurement = convertToMeasurement(measurementDTO);
-        Optional<Sensor> foundSensor = sensorService.findByName(measurement.getSensor().getName());
-        if (foundSensor.isEmpty()) {
-            ObjectError error = new FieldError("sensor", "sensor", "no such sensor");
-            bindingResult.addError(error);
-
-        }
+        measurementValidator.validate(measurement, bindingResult);
         //проверка ошибок
         if (bindingResult.hasErrors()) {
             List<FieldError> errors = bindingResult.getFieldErrors();

@@ -1,57 +1,45 @@
 package ru.shulpov.springapp.SensorRestApp.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import ru.shulpov.springapp.SensorRestApp.models.Sensor;
-import ru.shulpov.springapp.SensorRestApp.utils.deserializers.MeasurementDTODeserializer;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 public class MeasurementDTO {
 
-    @NotEmpty(message = "Field shouldn't be empty")
-    @Size(min = -100, max = 100, message = "Value should be from -100 to 100")
-    private float value;
+    @NotNull(message = "Field shouldn't be empty")
+    @Min(value = -100, message = "Value should be more than -100")
+    @Max(value = 100, message = "Value shouldn't be more than 100")
+    private Float value;
 
-    @NotEmpty(message = "Field shouldn't be empty")
-    private boolean raining;
-
-    @NotEmpty(message = "Field shouldn't be empty")
+    @NotNull(message = "Field shouldn't be empty")
+    private Boolean raining;
     @JsonProperty("sensor")
+    @NotNull(message = "Field shouldn't be empty")
     private SensorDTO sensorDTO;
 
-    public MeasurementDTO(float value, boolean raining, SensorDTO sensorDTO) {
-        this.value = value;
-        this.raining = raining;
-        this.sensorDTO = sensorDTO;
-    }
-
-    public MeasurementDTO() {
-
-    }
-
-    public float getValue() {
+    public Float getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(Float value) {
         this.value = value;
     }
 
-    public boolean isRaining() {
+    public Boolean isRaining() {
         return raining;
     }
 
-    public void setRaining(boolean raining) {
+    public void setRaining(Boolean raining) {
         this.raining = raining;
     }
 
-    public SensorDTO getSensorDTO() {
+    public SensorDTO getSensor() {
         return sensorDTO;
     }
 
-    public void setSensorDTO(SensorDTO sensorDTO) {
+    public void setSensor(SensorDTO sensorDTO) {
         this.sensorDTO = sensorDTO;
     }
 }

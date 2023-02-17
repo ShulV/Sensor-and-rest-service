@@ -1,36 +1,35 @@
 package ru.shulpov.springapp.SensorRestApp.utils.validators;
 
-import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import ru.shulpov.springapp.SensorRestApp.dto.MeasurementDTO;
+import ru.shulpov.springapp.SensorRestApp.models.Measurement;
 import ru.shulpov.springapp.SensorRestApp.models.Sensor;
 import ru.shulpov.springapp.SensorRestApp.services.SensorService;
 
 import java.util.Optional;
 
 @Component
-public class SensorValidator implements Validator {
+public class MeasurementValidator implements Validator {
     private final SensorService sensorService;
 
     @Autowired
-    public SensorValidator(SensorService sensorService) {
+    public MeasurementValidator(SensorService sensorService) {
         this.sensorService = sensorService;
     }
 
     @Override
-    public boolean supports(@NotNull Class<?> clazz) {
-        return Sensor.class.equals(clazz);
+    public boolean supports(Class<?> clazz) {
+        return Measurement.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        Sensor sensor = (Sensor) target;
-        String name = sensor.getName();
-        Optional<Sensor> sensorFromDB = sensorService.findByName(name);
-        if (sensorFromDB.isPresent()) {
-            errors.rejectValue("name", "", "Sensor with the same name already exists");
+        Measurement measurement = (Measurement) target;
+        if (sensorService.findByName(measurement.getSensor().getName()).isEmpty()) {
+            errors.rejectValue("sensor", "", "no such sensor");
         }
     }
 }
