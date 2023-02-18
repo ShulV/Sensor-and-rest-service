@@ -7,6 +7,7 @@ import ru.shulpov.springapp.SensorRestApp.models.Measurement;
 import ru.shulpov.springapp.SensorRestApp.repositories.MeasurementRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,5 +30,13 @@ public class MeasurementService {
     private void enrichMeasurement(Measurement measurement) {
         measurement.setSensor(sensorService.findByName(measurement.getSensor().getName()).get());
         measurement.setDate(LocalDate.now());
+    }
+
+    public List<Measurement> getAll() {
+        return measurementRepository.findAll();
+    }
+
+    public Integer countByRainingTrue() {
+        return measurementRepository.countByRainingTrue();
     }
 }

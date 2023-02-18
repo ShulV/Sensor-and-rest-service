@@ -16,7 +16,11 @@ import ru.shulpov.springapp.SensorRestApp.utils.responses.MeasurementErrorRespon
 import ru.shulpov.springapp.SensorRestApp.utils.validators.MeasurementValidator;
 
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/measurements")
@@ -63,6 +67,18 @@ public class MeasurementRestController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    public List<MeasurementDTO> getAll() {
+         return measurementService.getAll().stream()
+                 .map(this::convertToMeasurementDTO)
+                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/rainyDaysCount")
+    public Map<String, Integer> getRainyDaysCount() {
+        return Collections.singletonMap("rainyDaysCount", measurementService.countByRainingTrue());
+    }
+
     @ExceptionHandler
     private ResponseEntity<MeasurementErrorResponse> handleException(MeasurementNotCreatedException e) {
         MeasurementErrorResponse measurementErrorResponse = new MeasurementErrorResponse(
@@ -73,5 +89,9 @@ public class MeasurementRestController {
 
     private Measurement convertToMeasurement(MeasurementDTO measurementDTO) {
         return modelMapper.map(measurementDTO, Measurement.class);
+    }
+
+    private MeasurementDTO convertToMeasurementDTO(Measurement measurement) {
+        return modelMapper.map(measurement, MeasurementDTO.class);
     }
 }

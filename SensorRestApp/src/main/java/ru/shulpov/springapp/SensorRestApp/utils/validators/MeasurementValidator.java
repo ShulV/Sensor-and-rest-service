@@ -4,12 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.shulpov.springapp.SensorRestApp.dto.MeasurementDTO;
 import ru.shulpov.springapp.SensorRestApp.models.Measurement;
-import ru.shulpov.springapp.SensorRestApp.models.Sensor;
 import ru.shulpov.springapp.SensorRestApp.services.SensorService;
-
-import java.util.Optional;
 
 @Component
 public class MeasurementValidator implements Validator {

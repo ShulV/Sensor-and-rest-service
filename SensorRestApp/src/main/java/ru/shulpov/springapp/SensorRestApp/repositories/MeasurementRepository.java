@@ -6,4 +6,5 @@ import ru.shulpov.springapp.SensorRestApp.models.Measurement;
 
 @Repository
 public interface MeasurementRepository extends JpaRepository<Measurement, Long> {
+    Integer countByRainingTrue();
 }

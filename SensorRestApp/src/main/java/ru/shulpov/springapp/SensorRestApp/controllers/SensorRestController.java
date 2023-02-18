@@ -6,9 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import ru.shulpov.springapp.SensorRestApp.dto.MeasurementDTO;
 import ru.shulpov.springapp.SensorRestApp.dto.SensorDTO;
 import ru.shulpov.springapp.SensorRestApp.models.Sensor;
 import ru.shulpov.springapp.SensorRestApp.services.SensorService;
@@ -56,6 +55,9 @@ public class SensorRestController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+
+
+
     @ExceptionHandler
     private ResponseEntity<SensorErrorResponse> handleException(SensorNotValidException e) {
         SensorErrorResponse sensorErrorResponse = new SensorErrorResponse(
@@ -66,5 +68,9 @@ public class SensorRestController {
 
     private Sensor convertToSensor(SensorDTO sensorDTO) {
         return modelMapper.map(sensorDTO, Sensor.class);
+    }
+
+    private SensorDTO convertToSensorDTO(Sensor sensor) {
+        return modelMapper.map(sensor, SensorDTO.class);
     }
 }
