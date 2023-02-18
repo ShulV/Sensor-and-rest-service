@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.shulpov.springapp.SensorRestApp.dto.MeasurementDTO;
+import ru.shulpov.springapp.SensorRestApp.dto.MeasurementsResponse;
 import ru.shulpov.springapp.SensorRestApp.models.Measurement;
 import ru.shulpov.springapp.SensorRestApp.services.MeasurementService;
 import ru.shulpov.springapp.SensorRestApp.services.SensorService;
@@ -68,10 +69,10 @@ public class MeasurementRestController {
     }
 
     @GetMapping("/all")
-    public List<MeasurementDTO> getAll() {
-         return measurementService.getAll().stream()
+    public MeasurementsResponse getAll() {
+         return new MeasurementsResponse(measurementService.getAll().stream()
                  .map(this::convertToMeasurementDTO)
-                 .collect(Collectors.toList());
+                 .collect(Collectors.toList()));
     }
 
     @GetMapping("/rainyDaysCount")
